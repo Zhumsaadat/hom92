@@ -66,7 +66,46 @@ usersRouter.post('/sessions', async (req, res, next) => {
     }
 });
 
+usersRouter.post('/google', async (req, res, next) => {
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: req.body.credential,
+            audience: config.google.clientId,
+        });
 
+        const payload = ticket.getPayload();
+
+        if (!payload) {
+            return res.status(400).send({error: 'Google login error!'});
+        }
+
+        const email = payload['email'];
+        const id = payload['sub'];
+        const displayName = payload['name'];
+
+        if (!email) {
+            return res.status(400).send({error: 'Email is not present'});
+        }
+
+        let user = await User.findOne({googleID: id});
+
+        if (!user) {
+            user = new User({
+                email,
+                password: crypto.randomUUID(),
+                googleID: id,
+                displayName,
+            });
+        }
+
+        user.generateToken();
+        await user.save();
+
+        return res.send({message: 'Login with Google successful!', user});
+    } catch (err) {
+        return next(err);
+    }
+});
 
 usersRouter.delete('/sessions', async (req, res, next) => {
     try {

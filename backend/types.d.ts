@@ -1,5 +1,5 @@
 import {Model} from "mongoose";
-import {WebSocket} from 'ws';
+import {WebSocket} from 'ws'
 
 export interface UserTypes {
     email: string;
