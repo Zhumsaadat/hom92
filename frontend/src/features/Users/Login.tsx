@@ -17,7 +17,7 @@ const Login = () => {
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    ws.current = new WebSocket('ws://localhost:8000/chat');
+    ws.current = new WebSocket('ws://localhost:8080/chat');
 
     ws.current.onclose = () => console.log('ws closed');
 

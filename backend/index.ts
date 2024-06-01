@@ -10,7 +10,7 @@ import User from "./models/User";
 const app = express();
 const chatRouter = Router();
 
-const port = 8000;
+const port = 8080;
 expressWs(app);
 
 app.use(express.json());
